@@ -1,4 +1,4 @@
-# WhereIsMyDocstring
+# WhereIsMyDocstring.jl
 
 ---
 
