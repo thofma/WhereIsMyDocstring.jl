@@ -14,7 +14,8 @@ module TestDocstrings
     baz(::Float64)
 
     "bla"
-    baz(::T, ::S) where {S <: Integer, T <: S}
+    function baz(::T, ::S) where {S <: Integer, T <: S}
+    end
 end
 
 D = @docmatch foo
