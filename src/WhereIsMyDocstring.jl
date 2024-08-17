@@ -107,7 +107,7 @@ end
 
 function list_documenter_docstring(mod, fun; sig = Union{})
   bind = Documenter.DocSystem.binding(mod, ex)
-  return list_documenter_docstring(mod, bind; sig)
+  return list_documenter_docstring(mod, bind; sig = sig)
 end
 
 function list_documenter_docstring(mod, bind::Base.Docs.Binding; sig = Union{})
