@@ -184,8 +184,6 @@ macro docmatch(ex, mod)
   return quote
     _list_documenter_docstring($(esc(mod)), $(QuoteNode(ex)))
   end
-  bind = Documenter.DocSystem.binding(Main, ex)
-  return list_documenter_docstring(bind, sig = typesig)
 end
 
 end # module WhereIsMyDocstring
