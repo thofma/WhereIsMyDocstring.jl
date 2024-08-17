@@ -64,6 +64,23 @@ Base.sin(::AbstractMatrix{<:Real})
 
 A more complicated example would be
 ````
-julia> s
-```
+julia> "blub"
+       function foo(x::Vector{S}, z::Matrix{T} = 1; y::Number = 2) where {S, T <: S}
+       end
+
+julia> @docmatch foo
+1-element Vector{WhereIsMyDocstring.DocStr}:
+ foo
+  Content:
+    blub [...]
+  Signature type:
+    Union{Tuple{Vector{S}}, Tuple{T}, Tuple{S}, Tuple{Vector{S}, Matrix{T}}} where {S, T<:S}
+  Include in ```@docs``` block:
+    foo(::Union{Tuple{Vector{S}}, Tuple{T}, Tuple{S}, Tuple{Vector{S}, Matrix{T}}} where {S, T<:S})
+    might need adjustment:
+    foo(::Array{S, 1}, ::Array{T, 2}) where {S, T<:S}
+  Source:
+   REPL[2]:1
+````
+Note that the type of the signature is garbled due to https://github.com/JuliaLang/julia/issues/29437. This also messes up the lookup. Here we are warned about this and a suggested way to fix it is provided via `foo(::Array{S, 1}, ::Array{T, 2}) where {S, T<:S}`.
 
