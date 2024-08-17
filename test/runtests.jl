@@ -23,6 +23,10 @@ module TestDocstrings
     "blub"
     function fookw(x::Number, z::Number = 1; y::Number = 2)
     end
+
+    "blub"
+    function foopa(x::Vector{S}, z::Matrix{T} = 1; y::Number = 2) where {S, T <: S}
+    end
 end
 
 D = @docmatch foo
@@ -52,4 +56,7 @@ D = @docmatch length
 @test sprint(show, D) isa String
 
 D = @docmatch fookw TestDocstrings
+@test sprint(show, D) isa String
+
+D = @docmatch foopa TestDocstrings
 @test sprint(show, D) isa String
