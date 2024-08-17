@@ -60,6 +60,7 @@ The macro returns the docstrings (including metadata). In view of ```` ```@docs 
 ````
 ```@docs
 Base.sin(::AbstractMatrix{<:Real})
+```
 ````
 
 A more complicated example is:
