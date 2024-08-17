@@ -77,7 +77,7 @@ julia> @docmatch foo
     Union{Tuple{Vector{S}}, Tuple{T}, Tuple{S}, Tuple{Vector{S}, Matrix{T}}} where {S, T<:S}
   Include in ```@docs``` block:
     foo(::Union{Tuple{Vector{S}}, Tuple{T}, Tuple{S}, Tuple{Vector{S}, Matrix{T}}} where {S, T<:S})
-    might need adjustment:
+    try the following:
     foo(::Array{S, 1}, ::Array{T, 2}) where {S, T<:S}
   Source:
    REPL[2]:1
