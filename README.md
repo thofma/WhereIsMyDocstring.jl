@@ -21,7 +21,7 @@ Enter: WhereIsMyDocString.jl
 ## Installation
 
 Since WhereIsMyDocstring.jl is a registered package, it can be simply installed as follows:
-```julia
+```
 julia> using Pkg; Pkg.install("WhereIsMyDocstring")
 ```
 
@@ -29,7 +29,7 @@ julia> using Pkg; Pkg.install("WhereIsMyDocstring")
 
 The provides the `@docmatch` macro, which allows one to simulate the behaviour of ```` ```@docs``` ```` blocks interactively. This is helpful in case a function has many different methods and docstrings, and one wants to include a specific one. In particular in the presence of type parameters, this can be a frustrating experience due to https://github.com/JuliaLang/julia/issues/29437. Here is a simple example:
 
-```julia
+```
 julia> using WhereIsMyDocstring
 
 julia> @docmatch sin
@@ -64,7 +64,7 @@ Base.sin(::AbstractMatrix{<:Real})
 ````
 
 A more complicated example is:
-````julia
+````julia-repl
 julia> "blub"
        function foo(x::Vector{S}, z::Matrix{T} = 1; y::Number = 2) where {S, T <: S}
        end
