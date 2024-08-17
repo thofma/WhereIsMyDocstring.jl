@@ -27,7 +27,7 @@ julia> using Pkg; Pkg.install("WhereIsMyDocstring")
 
 ## Usage
 
-The provides the `@docmatch` macro, which allows one to simulate the behaviour of ```` ```@docs``` ```` blocks interactively. This is helpful in case a function has many different methods and docstrings, and one wants to include a specific one. In particular in the presence of type parameters, this can be a frustrating experience due to https://github.com/JuliaLang/julia/issues/29437. Here is a simple example:
+The package provides the `@docmatch` macro, which allows one to simulate the behaviour of ```` ```@docs``` ```` blocks interactively. This is helpful in case a function has many different methods and docstrings, and one wants to include a specific one. In particular in the presence of type parameters, this can be a frustrating experience due to https://github.com/JuliaLang/julia/issues/29437. Here is a simple example:
 
 ```
 julia> using WhereIsMyDocstring
