@@ -34,6 +34,20 @@ end
 
 # Some type printing gymnastics for the signatures
 
+function _name(x)
+  S = string(x)
+  r1 = r"(.+?)<:([a-zA-Z1-9]*)"
+  r2 = r"([a-zA-Z1-9]*)<:(.+?)<:([a-zA-Z1-9]*)"
+  while match(r2, S) !== nothing
+    S = replace(S, r2 => s"\2")
+  end
+  
+  while match(r1, S) !== nothing
+    S = replace(S, r1 => s"\1")
+  end
+  return S
+end
+
 function _print_type_hint(x::Type)
   @assert x isa UnionAll
   vars = []
@@ -45,11 +59,15 @@ function _print_type_hint(x::Type)
     x = x.b
   end
   @assert x <: Tuple
-  res = "(" * join(["::$(replace(string(T),r"[a-zA-Z]<:" => "<:"))" for T in x.parameters], ", ") * ")"
+  res = "(" * join(["::$(_name(T))" for T in x.parameters], ", ") * ")"
   while occursin("::<:", res)
     res = replace(res, "::<:" => "::")
   end
-  return res
+  while occursin("<:<:", res)
+    res = replace(res, "<:<:" => "<:")
+  end
+
+  return res * " where {" * join(vars, ", ") * "}"
 end
 
 function _print_type(x::Type)
