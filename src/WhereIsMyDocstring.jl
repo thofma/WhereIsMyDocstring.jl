@@ -36,7 +36,7 @@ end
 
 function _name(x)
   S = string(x)
-  r1 = r"(.+?)<:([a-zA-Z1-9]*)"
+  r1 = r"([a-zA-Z1-9]*)<:([a-zA-Z1-9]*)"
   r2 = r"([a-zA-Z1-9]*)<:(.+?)<:([a-zA-Z1-9]*)"
   while match(r2, S) !== nothing
     S = replace(S, r2 => s"\2")
@@ -76,7 +76,7 @@ function _print_type(x::Type)
   end
   if x isa UnionAll
     res = _print_type_hint(x)
-    return ["(::$x)\n    might need adjustment:", "$res"]
+    return ["(::$x)\n    try the following:", "$res"]
   end
   _print_type_real(x)
 end
