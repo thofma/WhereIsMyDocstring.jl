@@ -10,7 +10,7 @@
 - Have you ever wondered, which docstring is included in a ```` ```@docs``` ```` block when writing the documentation?
 - Are you tired of finding the magic syntax to include the *right* docstring of a method?
 
-Enter: WhereIsMyDocString.jl
+Enter: WhereIsMyDocstring.jl
 
 ## Status
 
