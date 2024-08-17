@@ -96,7 +96,7 @@ function Base.show(io::IO, d::DocStr)
   end
   printstyled(io, "\n  Source:", color = :light_green)
   printstyled(io, "\n   ", d.source, color = :light_grey)
-  println(io, "\n", "="^displaysize(stdout)[2])
+  print(io, "\n", "="^displaysize(stdout)[2])
 end
 
 function _list_documenter_docstring(mod, ex)
@@ -118,6 +118,55 @@ end
 function list_documenter_docstring(bind::Base.Docs.Binding; sig = Union{})
   res = Documenter.DocSystem.getdocs(bind, sig)
   return [DocStr(r) for r in res]
+end
+
+"""
+    @docmatch f
+    @docmatch f(sig)
+    @docmatch f module
+    @docmatch f(sig) module
+
+Retrieves all docstrings that would be included in the block
+````
+```@docs
+f
+```
+````
+or
+````
+```@docs
+f(sig)
+```
+````
+The optional argument `module` controls in which module to look for `f`.
+
+#### Example
+
+```
+julia> @docmatch sin
+2-element Vector{WhereIsMyDocstring.DocStr}:
+ Base.sin
+  Content:
+    sin(x) [...]
+  Signature type:
+    Tuple{Number}
+  Include in ```@docs``` block:
+    Base.sin(::Number)
+  Source:
+   math.jl:490
+================================================================================
+ Base.sin
+  Content:
+    sin(A::AbstractMatrix) [...]
+  Signature type:
+    Tuple{AbstractMatrix{<:Real}}
+  Include in ```@docs``` block:
+    Base.sin(::AbstractMatrix{<:Real})
+  Source:
+    /usr/share/julia/stdlib/v1.10/LinearAlgebra/src/dense.jl:956
+```
+"""
+macro docmatch
 end
 
 macro docmatch(ex)
