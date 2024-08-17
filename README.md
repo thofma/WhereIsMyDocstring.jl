@@ -62,8 +62,8 @@ The macro returns the docstrings (including metadata). In view of ```` ```@docs 
 Base.sin(::AbstractMatrix{<:Real})
 ````
 
-A more complicated example would be
-````
+A more complicated example is:
+````julia
 julia> "blub"
        function foo(x::Vector{S}, z::Matrix{T} = 1; y::Number = 2) where {S, T <: S}
        end
