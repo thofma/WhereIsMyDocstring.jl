@@ -35,16 +35,27 @@ end
 # Some type printing gymnastics for the signatures
 
 function _name(x)
-  S = string(x)
-  r1 = r"([a-zA-Z1-9]*)<:([a-zA-Z1-9]*)"
-  r2 = r"([a-zA-Z1-9]*)<:(.+?)<:([a-zA-Z1-9]*)"
-  while match(r2, S) !== nothing
-    S = replace(S, r2 => s"\2")
+  if x isa TypeVar
+    return string(x.name)
   end
-  
-  while match(r1, S) !== nothing
-    S = replace(S, r1 => s"\1")
+  S = string(Base.typename(x).name) 
+  if !hasfield(typeof(x), :parameters)
+    return S
   end
+  if length(x.parameters) > 0
+    S = S * "{"
+    for i in 1:length(x.parameters)
+      if x.parameters[i] isa TypeVar
+        S = S * string(x.parameters[i].name)
+      else
+        S = S * string(x.parameters[i])
+      end
+      if i < length(x.parameters)
+        S = S * ", "
+      end
+    end
+  end
+  S = S * "}"
   return S
 end
 
@@ -55,19 +66,40 @@ function _print_type_hint(x::Type)
     push!(vars, x.var)
     x = x.body
   end
-  while x isa Union
-    x = x.b
+  # why oh why
+  # the problem is that there is a big union
+  # and union unions are implemented recursively via x -> x.a, x.b
+  # and I cannot say which one is the right one
+  thingstoconsider = Any[x]
+  thingsspitout = []
+  while !isempty(thingstoconsider)
+    x = pop!(thingstoconsider)
+    if x isa Union
+      push!(thingstoconsider, x.a)
+      push!(thingstoconsider, x.b)
+    elseif x <: Tuple
+      push!(thingsspitout, x)
+    end
   end
-  @assert x <: Tuple
-  res = "(" * join(["::$(_name(T))" for T in x.parameters], ", ") * ")"
-  while occursin("::<:", res)
-    res = replace(res, "::<:" => "::")
+  maxl, i = findmax(_length, thingsspitout)
+  if count(x -> _length(x) == maxl, thingsspitout) == 1
+    thingsspitout = thingsspitout[i:i]
+  else
+    filter!(x -> !(x.parameters[1] isa TypeVar), thingsspitout)
   end
-  while occursin("<:<:", res)
-    res = replace(res, "<:<:" => "<:")
+  r = [] 
+  for x in thingsspitout
+    res = "(" * join(["::$(_name(T))" for T in x.parameters], ", ") * ")"
+    while occursin("::<:", res)
+      res = replace(res, "::<:" => "::")
+    end
+    while occursin("<:<:", res)
+      res = replace(res, "<:<:" => "<:")
+    end
+    res = res * " where {" * join(vars, ", ") * "}"
+    push!(r, res)
   end
-
-  return res * " where {" * join(vars, ", ") * "}"
+  return r
 end
 
 function _print_type(x::Type)
@@ -76,7 +108,7 @@ function _print_type(x::Type)
   end
   if x isa UnionAll
     res = _print_type_hint(x)
-    return ["(::$x)\n    try the following:", "$res"]
+    return ["(::$x)\n    try one of the following:", res...]
   end
   _print_type_real(x)
 end
@@ -203,5 +235,10 @@ macro docmatch(ex, mod)
     _list_documenter_docstring($(esc(mod)), $(QuoteNode(ex)))
   end
 end
+
+function _length(x::DataType)# where {T<: Tuple}
+  return length(x.parameters)
+end
+
 
 end # module WhereIsMyDocstring
